@@ -1,0 +1,41 @@
+
+
+docker build -t 537083511455.dkr.ecr.us-east-2.amazonaws.com/django-aws-backend:latest .
+
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 537083511455.dkr.ecr.us-east-2.amazonaws.com/django-aws-backend
+
+
+docker compose -f .\django-aws-infrastructure\docker-compose.yml run terraform plan
+docker compose -f .\django-aws-infrastructure\docker-compose.yml run terraform apply
+
+docker run -p 8000:8000 214359149859.dkr.ecr.eu-west-2.amazonaws.com/django-aws-backend:latest  gunicorn -b 0.0.0.0:8000 config.wsgi:application
+
+
+
+docker build -t test_img .
+docker run -p 8000:8000 test_img python manage.py runserver
+
+terraform force-unlock -force b3c9d06f-406a-0b93-3adb-b1345ad5c3b1
+
+
+https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-exec.html#ecs-exec-prerequisites
+https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html
+
+
+# get task id
+aws ecs list-tasks --cluster prod --service-name prod-backend-web  --query 'taskArns[0]' --output text
+
+third value after /
+
+aws ecs execute-command --taskTASK_ID --command "bash" --interactive --cluster prod --region eu-west-2
+
+Deletion:
+load balancer & target group
+ecs
+ecr
+cloud watch
+iam role: iam - ecs-task-execution, prod-backend-task
+rds - db and subnet
+vpc
+elastic ip - release
+

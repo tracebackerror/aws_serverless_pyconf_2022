@@ -1,0 +1,18 @@
+version: "3.1"
+
+services:
+  postgres:
+    image: "postgres:14"
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "django_aws"
+
+  django:
+    image: "django-aws-backend:latest"
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "5000:8000"
+    environment:
+      DATABASE_URL: ""

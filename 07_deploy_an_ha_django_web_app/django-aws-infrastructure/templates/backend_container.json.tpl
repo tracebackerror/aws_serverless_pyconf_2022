@@ -1,0 +1,47 @@
+[
+  {
+    "name": "${name}",
+    "image": "${image}",
+    "essential": true,
+    "links": [],
+    "portMappings": [
+      {
+        "containerPort": 8000,
+        "hostPort": 8000,
+        "protocol": "tcp"
+      }
+    ],
+    "environment": [
+      {
+        "name": "DATABASE_URL",
+        "value": "postgresql://${rds_username}:${rds_password}@${rds_hostname}:5432/${rds_db_name}"
+      },
+      {
+        "name": "DB_HOST",
+        "value": "${rds_hostname}"
+      },
+      {
+        "name": "DB_USER",
+        "value": "${rds_username}"
+      },
+      {
+        "name": "DB_PASSWORD",
+        "value": "${rds_password}"
+      },
+      {
+        "name": "DB_NAME",
+        "value": "${rds_db_name}"
+      }
+
+    ],
+    "command": ${jsonencode(command)},
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${log_group}",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "${log_stream}"
+      }
+    }
+  }
+]
